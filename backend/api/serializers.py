@@ -2,25 +2,12 @@ from django.db.models import F
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
 
-from .models import Ingredient, IngredientsInPosition, Position
-
-
-class IngredientInRecipeSerializer(serializers.ModelSerializer):
-    amount = serializers.SerializerMethodField()
-
-    class Meta:
-        fields = ('id', 'name', 'measurement_unit', 'amount')
-        model = Ingredient
-        read_only_fields = ['id', 'name', 'measurement_unit']
-
-        def get_amount(self, obj):
-            return obj.ingredientinrecipe.values('amount')[0].get('amount')
+from .models import IngredientsInPosition, Position
 
 
 class RecipeSerializer(serializers.ModelSerializer):
-    # amount_ingredients = serializers.IntegerField()
+    image = serializers.Base64ImageField()
 
     class Meta:
         fields = '__all__'
