@@ -1,14 +1,20 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from .models import Category, Ingredient, Position
+from .models import Category, Ingredient, Position, IngredientsInPosition
 from .serializers import (CategorySerializer, IngredientSerializer,
-                          RecipeSerializer)
+                          RecipeSerializer, IngredientInRecipeSerializer)
 
 
 class IngredientsViewSet(ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
+    pagination_class = None
+
+
+class IngredientInRecipeViewSet(ReadOnlyModelViewSet):
+    queryset = IngredientsInPosition.objects.all()
+    serializer_class = IngredientInRecipeSerializer
     pagination_class = None
 
 
