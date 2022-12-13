@@ -20,7 +20,8 @@ class IngredientInRecipeSerializer(serializers.ModelSerializer):
 
 
 class RecipeSerializer(serializers.ModelSerializer):
-    ingredients = serializers.SerializerMethodField()
+    # ingredients = serializers.SerializerMethodField()
+    amount = serializers.SerializerMethodField('amount')
     # image = Base64ImageField()
 
     class Meta:
@@ -32,29 +33,30 @@ class RecipeSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'measurement_unit',
-            amount=F('ingredient_in_recipe__amount'),
+            amount=F('ingredient_position__amount'),
         )
         return ingredients
     
     @staticmethod
-    def create_ingredients(ingredients, recipe):
+    def create_ingredients(ingredients, recipe, amount):
         for ingredient in ingredients:
-            get_ingredient = Ingredient.objects.get(id=ingredient['id'])
+            get_ingredient = Ingredient.objects.get(id=ingredient)
             IngredientsInPosition.objects.create(
                 recipe=recipe, ingredient=get_ingredient,
-                amount=ingredient['amount']
+                amount=amount
             )
 
     def create(self, validated_data):
         # author = self.context.get('request').user
         ingredients = validated_data.pop('ingredients')
+        amount = validated_data.pop('amount')
         categories = validated_data.pop('category')
         recipe = Position.objects.create(**validated_data)
         for category in categories:
             recipe.category.add(category)
         for ingredient in ingredients:
             recipe.ingredients.add(ingredient)
-        self.create_ingredients(ingredients, recipe)
+        self.create_ingredients(ingredients, recipe, amount)
         return recipe
 
     def update(self, instance, validated_data):
