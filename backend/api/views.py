@@ -1,8 +1,10 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Ingredient, Category
-from rest_framework.viewsets import ReadOnlyModelViewSet
-from .serializers import IngredientSerializer, CategorySerializer
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+
+from .models import Category, Ingredient, Position
+from .serializers import (CategorySerializer, IngredientSerializer,
+                          RecipeSerializer)
 
 
 @api_view(['GET'])
@@ -22,3 +24,8 @@ class CategoriesViewSet(ReadOnlyModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     pagination_class = None
+
+
+class PositionViewSet(ModelViewSet):
+    queryset = Position.objects.all()
+    serializer_class = RecipeSerializer

@@ -15,7 +15,7 @@ class Ingredient(Model):
 
 class Position(Model):
     name = CharField(max_length=50)
-    image = ImageField(upload_to='positions')
+    image = ImageField(upload_to='positions', blank=True, null=True)
     price = PositiveSmallIntegerField()
     category = ManyToManyField(
         Category,
