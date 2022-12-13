@@ -20,47 +20,35 @@ class IngredientInRecipeSerializer(serializers.ModelSerializer):
 
 
 class RecipeSerializer(serializers.ModelSerializer):
-    # ingredients = serializers.SerializerMethodField()
-    amount = serializers.SerializerMethodField('amount')
-    # image = Base64ImageField()
+    # amount_ingredients = serializers.IntegerField()
 
     class Meta:
         fields = '__all__'
         model = Position
 
-    def get_ingredients(self, obj):
-        ingredients = obj.ingredients.values(
-            'id',
-            'name',
-            'measurement_unit',
-            amount=F('ingredient_position__amount'),
-        )
-        return ingredients
-    
     @staticmethod
-    def create_ingredients(ingredients, recipe, amount):
+    def create_ingredients(ingredients, position, amount_ingredients):
         for ingredient in ingredients:
-            get_ingredient = Ingredient.objects.get(id=ingredient)
             IngredientsInPosition.objects.create(
-                recipe=recipe, ingredient=get_ingredient,
-                amount=amount
+                position=position, ingredient=ingredient,
+                amount=amount_ingredients
             )
 
     def create(self, validated_data):
         # author = self.context.get('request').user
         ingredients = validated_data.pop('ingredients')
-        amount = validated_data.pop('amount')
+        amount_ingredients = validated_data.pop('amount_ingredients')
         categories = validated_data.pop('category')
-        recipe = Position.objects.create(**validated_data)
+        position = Position.objects.create(**validated_data)
         for category in categories:
-            recipe.category.add(category)
+            position.category.add(category)
         for ingredient in ingredients:
-            recipe.ingredients.add(ingredient)
-        self.create_ingredients(ingredients, recipe, amount)
-        return recipe
+            position.ingredients.add(ingredient)
+        self.create_ingredients(ingredients, position, amount_ingredients)
+        return position
 
     def update(self, instance, validated_data):
         instance.tags.clear()
-        IngredientsInPosition.objects.filter(recipe=instance).delete()
+        IngredientsInPosition.objects.filter(position=instance).delete()
         self.create_ingredients(validated_data.pop('ingredients'), instance)
         return super().update(instance, validated_data)
