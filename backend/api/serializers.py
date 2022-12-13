@@ -1,8 +1,10 @@
-from .models import Category, Ingredient, IngredientsInPosition, Position
+from django.db.models import F
+from drf_extra_fields.fields import Base64ImageField
+from rest_framework import serializers
 from rest_framework.serializers import (IntegerField, ModelSerializer,
                                         PrimaryKeyRelatedField, ReadOnlyField)
-from django.db.models import F
-from rest_framework import serializers
+
+from .models import Category, Ingredient, IngredientsInPosition, Position
 
 
 class IngredientSerializer(ModelSerializer):
@@ -31,7 +33,7 @@ class CategorySerializer(ModelSerializer):
 
 
 class RecipeSerializer(serializers.ModelSerializer):
-    image = serializers.Base64ImageField()
+    image = Base64ImageField()
 
     class Meta:
         fields = '__all__'

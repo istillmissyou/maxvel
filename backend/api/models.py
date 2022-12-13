@@ -1,7 +1,7 @@
 from django.core.validators import MinValueValidator
 from django.db.models import (CASCADE, CharField, ForeignKey, ImageField,
                               ManyToManyField, Model,
-                              PositiveSmallIntegerField, TextField)
+                              PositiveSmallIntegerField, TextField, BooleanField)
 
 
 class Category(Model):
@@ -17,6 +17,7 @@ class Position(Model):
     name = CharField(max_length=50)
     image = ImageField(upload_to='positions', blank=True, null=True)
     price = PositiveSmallIntegerField()
+    new = BooleanField(default=False)
     category = ManyToManyField(
         Category,
         related_name='positions',

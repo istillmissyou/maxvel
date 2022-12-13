@@ -1,4 +1,5 @@
 from rest_framework.decorators import api_view
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
@@ -26,6 +27,17 @@ class CategoriesViewSet(ReadOnlyModelViewSet):
     pagination_class = None
 
 
-class PositionViewSet(ModelViewSet):
+class PositionViewSet(ReadOnlyModelViewSet):
     queryset = Position.objects.all()
     serializer_class = RecipeSerializer
+
+
+class PositionList(ListAPIView):
+    serializer_class = RecipeSerializer
+
+    def get_queryset(self):
+        queryset = Position.objects.all()
+        category = self.request.query_params.get('category')
+        if category is not None:
+            queryset = queryset.filter(new=True)
+        return queryset.filter(category=category)
