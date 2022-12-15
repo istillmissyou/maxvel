@@ -29,6 +29,7 @@ flower==0.9.7
 gevent==22.10.2
 greenlet==2.0.1
 humanize==4.4.0
+gunicorn==20.1.0
 idna==3.4
 inflection==0.5.1
 isort==5.11.1
@@ -43,6 +44,7 @@ phonenumbers==8.13.2
 Pillow==9.3.0
 prometheus-client==0.8.0
 prompt-toolkit==3.0.36
+psycopg2-binary==2.9.5
 pycodestyle==2.10.0
 pycparser==2.21
 pyflakes==3.0.1
