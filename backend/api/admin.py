@@ -1,18 +1,13 @@
 from django.contrib import admin
 
-from .models import Position, Ingredient, Category, ImagePositions
+from .models import (Category, Ingredient, PosithionForShopingCart, Position,
+                     ShoppingCart)
 
 
-class PositionAdmin(admin.ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
         'name',
-        'price',
-        # 'category',
-        'amount',
-        # 'ingredients',
-        # 'images',
-        'text',
     )
 
 
@@ -25,21 +20,43 @@ class IngredientAdmin(admin.ModelAdmin):
     )
 
 
-class CategoryAdmin(admin.ModelAdmin):
+class PositionAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
         'name',
+        'price',
+        # 'category',
+        'amount',
+        # 'image',
+        'text',
     )
 
 
-class ImagePositionsAdmin(admin.ModelAdmin):
+class ShoppingCartAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
-        'image',
+        # 'positions',
+        'all_amount',
+        'name_user',
+        'phone',
+        'email',
+        'address',
+        'date_start',
+        'comment',
+        'pub_date',
     )
 
 
-admin.site.register(ImagePositions, ImagePositionsAdmin)
-admin.site.register(Position, PositionAdmin)
+class PosithionForShopingCartAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+        'position',
+        'amount',
+    )
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Ingredient, IngredientAdmin)
+admin.site.register(Position, PositionAdmin)
+admin.site.register(ShoppingCart, ShoppingCartAdmin)
+admin.site.register(PosithionForShopingCart, PosithionForShopingCartAdmin)

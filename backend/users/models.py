@@ -1,0 +1,51 @@
+import phonenumbers
+from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+
+class User(AbstractUser):
+    username = models.CharField(max_length=150, unique=True)
+
+    class Meta:
+        ordering = ('username',)
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
+    def __str__(self):
+        return self.username
+
+
+class Link(models.Model):
+    link = models.URLField(max_length=128)
+
+    class Meta:
+        verbose_name = 'Ссылка'
+        verbose_name_plural = 'Ссылки'
+
+    def __str__(self):
+        return self.link
+
+
+class Contact(models.Model):
+    links = models.ManyToManyField(Link, related_name='contact')
+    phone = models.CharField(max_length=12)
+    address = models.CharField(max_length=1024)
+    address_on_map = models.CharField(max_length=1024)
+    email = models.EmailField(max_length=255)
+
+    class Meta:
+        verbose_name = 'Контакт'
+        verbose_name_plural = 'Контакты'
+
+    def clean(self):
+        new_number = phonenumbers.parse(self.phone, "RU")
+        print(new_number)
+        if phonenumbers.is_valid_number(new_number) is False:
+            raise ValidationError(_('Поле телефона не корректное'))
+        # if len(self.phone) != 11:
+        #     raise ValidationError(_('Поле телефона должно состоять из 11 цифр'))
+
+    def __str__(self):
+        return self.phone
