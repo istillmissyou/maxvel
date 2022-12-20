@@ -9,7 +9,11 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Category(Model):
-    name = CharField(max_length=50, unique=True)
+    name = CharField(
+        verbose_name='Наименование',
+        max_length=50,
+        unique=True,
+    )
     order = IntegerField(default=0)
 
     class Meta:
@@ -22,41 +26,47 @@ class Category(Model):
 
 
 class Ingredient(Model):
-    name = CharField(max_length=50)
-    measurement_unit = CharField(max_length=30)
+    name = CharField(verbose_name='Наименование', max_length=50)
+    measurement_unit = CharField(
+        verbose_name='Единица измерения',
+        max_length=30,
+    )
     amount = PositiveSmallIntegerField(
+        verbose_name='Количество',
         validators=(
             MinValueValidator(1),
-        )
+        ),
     )
 
     class Meta:
-        verbose_name = 'Ингридиент'
-        verbose_name_plural = 'Ингридиенты'
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
 
     def __str__(self):
         return self.name
 
 
 class Position(Model):
-    name = CharField(max_length=50)
-    price = PositiveSmallIntegerField()
-    new = BooleanField(default=False)
-    amount = PositiveSmallIntegerField(
-        validators=(
-            MinValueValidator(1),
-        )
-    )
-    text = TextField()
+    name = CharField(verbose_name='Наименование', max_length=50)
+    price = PositiveSmallIntegerField(verbose_name='Цена')
+    new = BooleanField(verbose_name='Новинка!', default=False)
+    text = TextField(verbose_name='Описание')
     ingredients = ManyToManyField(
         Ingredient,
+        verbose_name='Ингредиенты',
         related_name='positions',
     )
     category = ManyToManyField(
         Category,
+        verbose_name='Категория',
         related_name='positions',
     )
-    image = ImageField(upload_to='position', blank=True, null=True)
+    image = ImageField(
+        verbose_name='Фото',
+        upload_to='position',
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         verbose_name = 'Позиция'
@@ -84,9 +94,14 @@ class Position(Model):
         return super(Position, self).save(*args, **kwargs)
 
 
-class PosithionForShopingCart(Model):
-    position = ForeignKey(Position, on_delete=CASCADE)
+class PositionForShopingCart(Model):
+    position = ForeignKey(
+        Position,
+        verbose_name='Позиция',
+        on_delete=CASCADE,
+    )
     amount = PositiveSmallIntegerField(
+        verbose_name='Количество',
         validators=(
             MinValueValidator(1),
         )
@@ -94,15 +109,21 @@ class PosithionForShopingCart(Model):
 
 
 class ShoppingCart(Model):
-    positions_in_cart = ManyToManyField(PosithionForShopingCart)
-    all_amount = IntegerField()
-    name_user = CharField(max_length=100)
-    phone = CharField(max_length=12)
-    email = EmailField(max_length=255)
-    address = CharField(max_length=1024)
-    date_start = DateTimeField()
-    comment = CharField(max_length=1024)
-    pub_date = DateTimeField(auto_now=True)
+    positions_in_cart = ManyToManyField(
+        PositionForShopingCart,
+        verbose_name='Позиция',
+    )
+    all_amount = IntegerField(verbose_name='Цена в итоге')
+    name_user = CharField(verbose_name='Клиент', max_length=100)
+    phone = CharField(verbose_name='Номер телефона', max_length=12)
+    email = EmailField(verbose_name='Почта', max_length=255)
+    address = CharField(verbose_name='Место мероприятия', max_length=1024)
+    date_start = DateTimeField(verbose_name='Дата мероприятия')
+    comment = CharField(verbose_name='Комментарий', max_length=1024)
+    pub_date = DateTimeField(
+        verbose_name='Дата создания заявки',
+        auto_now=True,
+    )
 
     class Meta:
         ordering = ('-pub_date',)

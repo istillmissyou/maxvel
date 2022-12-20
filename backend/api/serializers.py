@@ -5,9 +5,9 @@ from rest_framework.serializers import (CharField, IntegerField,
                                         ModelSerializer, SerializerMethodField,
                                         ValidationError)
 from rest_framework.validators import UniqueValidator
-from users.models import Contact, Link, User
 
-from .models import (Category, Ingredient, PosithionForShopingCart, Position,
+from users.models import Contact, Link, User
+from .models import (Category, Ingredient, Position, PositionForShopingCart,
                      ShoppingCart)
 
 
@@ -97,15 +97,15 @@ class PositionCreateSerializer(ModelSerializer):
         return super().update(instance, validated_data)
 
 
-class PosithionForShopingCartSerializer(ModelSerializer):
+class PositionForShopingCartSerializer(ModelSerializer):
 
     class Meta:
         fields = '__all__'
-        model = PosithionForShopingCart
+        model = PositionForShopingCart
 
 
 class ShoppingCartSerializer(ModelSerializer):
-    positions_in_cart = PosithionForShopingCartSerializer(many=True)
+    positions_in_cart = PositionForShopingCartSerializer(many=True)
 
     class Meta:
         fields = '__all__'
@@ -115,14 +115,12 @@ class ShoppingCartSerializer(ModelSerializer):
         new_number = phonenumbers.parse(value, "RU")
         if phonenumbers.is_valid_number(new_number) is False:
             raise ValidationError('Поле телефона не корректное')
-        # if len(value) != 11:
-        #     raise ValidationError('Поле телефона должно состоять из 11 цифр')
         return value
 
     @staticmethod
     def create_positions_for_card(shopping_cart, positions):
         for position in positions:
-            position_with_amount = PosithionForShopingCart.objects.create(
+            position_with_amount = PositionForShopingCart.objects.create(
                 position=position['position'],
                 amount=position['amount']
             )
@@ -161,8 +159,6 @@ class ContactSerializer(ModelSerializer):
         new_number = phonenumbers.parse(value, "RU")
         if phonenumbers.is_valid_number(new_number) is False:
             raise ValidationError('Поле телефона не корректное')
-        # if len(value) != 11:
-        #     raise ValidationError('Поле телефона должно состоять из 11 цифр')
         return value
 
     @staticmethod

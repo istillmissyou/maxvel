@@ -1,7 +1,8 @@
-from api.models import ShoppingCart
 from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+
+from api.models import ShoppingCart
 from maxvel.celery import app
 
 

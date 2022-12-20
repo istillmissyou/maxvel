@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import (Category, Ingredient, PosithionForShopingCart, Position,
+from .models import (Category, Ingredient, PositionForShopingCart, Position,
                      ShoppingCart)
 
 
@@ -26,7 +26,7 @@ class PositionAdmin(admin.ModelAdmin):
         'name',
         'price',
         # 'category',
-        'amount',
+        # 'amount',
         # 'image',
         'text',
     )
@@ -59,4 +59,4 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Position, PositionAdmin)
 admin.site.register(ShoppingCart, ShoppingCartAdmin)
-admin.site.register(PosithionForShopingCart, PosithionForShopingCartAdmin)
+admin.site.register(PositionForShopingCart, PosithionForShopingCartAdmin)
