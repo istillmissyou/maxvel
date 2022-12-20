@@ -12,16 +12,16 @@ def send_email_with_shopping_card(pk):
     topic = "Новый заказ"
     email_from = settings.EMAIL_HOST_USER
     email = [settings.EMAIL_USER]
-    message = ''
+    message = 'Пришел новый заказ'
     for position in shopping_card.positions_in_cart.all():
-        message += position.position.name
-    message += str(shopping_card.all_amount)
-    message += shopping_card.name_user
-    message += shopping_card.phone
-    message += shopping_card.email
-    message += shopping_card.address
-    message += str(shopping_card.date_start)
-    message += shopping_card.comment
+        message += position.position.name + '\n'
+    message += str(shopping_card.all_amount) + '\n'
+    message += shopping_card.name_user + '\n'
+    message += shopping_card.phone + '\n'
+    message += shopping_card.email + '\n'
+    message += shopping_card.address + '\n'
+    message += str(shopping_card.date_start) + '\n'
+    message += shopping_card.comment + '\n'
     send_mail(
         topic,
         message,

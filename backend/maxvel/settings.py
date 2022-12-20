@@ -159,10 +159,6 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
-TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
-
-CHAT_ID = os.getenv('CHAT_ID')
-
 REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'
 CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'

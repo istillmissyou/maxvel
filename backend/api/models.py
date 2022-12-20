@@ -21,21 +21,21 @@ class Category(Model):
         return self.name
 
 
-class Ingredient(Model):
-    name = CharField(max_length=50)
-    measurement_unit = CharField(max_length=30)
-    amount = PositiveSmallIntegerField(
-        validators=(
-            MinValueValidator(1),
-        )
-    )
+# class Ingredient(Model):
+#     name = CharField(max_length=50)
+#     measurement_unit = CharField(max_length=30)
+#     amount = PositiveSmallIntegerField(
+#         validators=(
+#             MinValueValidator(1),
+#         )
+#     )
 
-    class Meta:
-        verbose_name = 'Ингридиент'
-        verbose_name_plural = 'Ингридиенты'
+#     class Meta:
+#         verbose_name = 'Ингридиент'
+#         verbose_name_plural = 'Ингридиенты'
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 
 class Position(Model):
@@ -48,10 +48,11 @@ class Position(Model):
         )
     )
     text = TextField()
-    ingredients = ManyToManyField(
-        Ingredient,
-        related_name='positions',
-    )
+    # ingredients = ManyToManyField(
+    #     Ingredient,
+    #     related_name='positions',
+    # )
+    ingredients = CharField(max_length=50)
     category = ManyToManyField(
         Category,
         related_name='positions',
@@ -74,8 +75,8 @@ class Position(Model):
             obj.image.delete()
 
     def delete(self, *args, **kwargs):
-        for ingredient in self.ingredients.all():
-            ingredient.delete()
+        # for ingredient in self.ingredients.all():
+        #     ingredient.delete()
         self.image.delete()
         return super(Position, self).delete(*args, **kwargs)
 
