@@ -5,9 +5,9 @@ from rest_framework.serializers import (CharField, IntegerField,
                                         ModelSerializer, SerializerMethodField,
                                         ValidationError)
 from rest_framework.validators import UniqueValidator
-from users.models import Contact, Link, User
 
-from .models import (Category, Ingredient, PosithionForShopingCart, Position,
+from users.models import Contact, Link, User
+from .models import (Category, Ingredient, Position, PositionForShopingCart,
                      ShoppingCart)
 
 
@@ -60,15 +60,52 @@ class PositionViewSerializer(ModelSerializer):
         ).data
 
 
-class PosithionForShopingCartSerializer(ModelSerializer):
+class PositionCreateSerializer(ModelSerializer):
+    ingredients = IngredientSerializer(many=True)
+    image = Base64ImageField()
 
     class Meta:
         fields = '__all__'
-        model = PosithionForShopingCart
+        model = Position
+
+    @staticmethod
+    def create_ingredients(ingredients, position):
+        for ingredient in ingredients:
+            new_ingredient = Ingredient.objects.create(
+                name=ingredient['name'],
+                measurement_unit=ingredient['measurement_unit'],
+                amount=ingredient['amount']
+            )
+            position.ingredients.add(new_ingredient)
+
+    def create(self, validated_data):
+        ingredients = validated_data.pop('ingredients', None)
+        categories = validated_data.pop('category', None)
+        position = Position.objects.create(**validated_data)
+        self.create_ingredients(ingredients, position)
+        position.category.set(categories)
+        return position
+
+    def update(self, instance, validated_data):
+        Ingredient.objects.filter(positions=instance).delete()
+        ingredients = validated_data.pop('ingredients', None)
+        self.create_ingredients(ingredients, instance)
+        for category in instance.category.all():
+            instance.category.remove(category)
+        categories = validated_data.pop('category', None)
+        instance.category.set(categories)
+        return super().update(instance, validated_data)
+
+
+class PositionForShopingCartSerializer(ModelSerializer):
+
+    class Meta:
+        fields = '__all__'
+        model = PositionForShopingCart
 
 
 class ShoppingCartSerializer(ModelSerializer):
-    positions_in_cart = PosithionForShopingCartSerializer(many=True)
+    positions_in_cart = PositionForShopingCartSerializer(many=True)
 
     class Meta:
         fields = '__all__'
@@ -82,14 +119,14 @@ class ShoppingCartSerializer(ModelSerializer):
     #     #     raise ValidationError('Поле телефона должно состоять из 11 цифр')
     #     return value
 
-    # @staticmethod
-    # def create_positions_for_card(shopping_cart, positions):
-    #     for position in positions:
-    #         position_with_amount = PosithionForShopingCart.objects.create(
-    #             position=position['position'],
-    #             amount=position['amount']
-    #         )
-    #         shopping_cart.positions_in_cart.add(position_with_amount)
+    @staticmethod
+    def create_positions_for_card(shopping_cart, positions):
+        for position in positions:
+            position_with_amount = PositionForShopingCart.objects.create(
+                position=position['position'],
+                amount=position['amount']
+            )
+            shopping_cart.positions_in_cart.add(position_with_amount)
 
     # def create(self, validated_data):
     #     positions = validated_data.pop('positions_in_cart', None)

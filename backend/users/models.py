@@ -18,7 +18,12 @@ class User(AbstractUser):
 
 
 class Link(models.Model):
-    link = models.URLField(max_length=128)
+    name = models.CharField(
+        verbose_name='Название',
+        max_length=30,
+        unique=True,
+    )
+    link = models.URLField(verbose_name='Ссылка', max_length=128)
 
     class Meta:
         verbose_name = 'Ссылка'
@@ -29,11 +34,18 @@ class Link(models.Model):
 
 
 class Contact(models.Model):
-    links = models.ManyToManyField(Link, related_name='contact')
-    phone = models.CharField(max_length=12)
-    address = models.CharField(max_length=1024)
-    address_on_map = models.CharField(max_length=1024)
-    email = models.EmailField(max_length=255)
+    links = models.ManyToManyField(
+        Link,
+        verbose_name='Ссылки',
+        related_name='contact',
+    )
+    phone = models.CharField(verbose_name='Телефон', max_length=12)
+    address = models.CharField(verbose_name='Адрес', max_length=1024)
+    address_on_map = models.CharField(
+        verbose_name='Адрес на карте',
+        max_length=1024,
+    )
+    email = models.EmailField(verbose_name='Почта', max_length=255)
 
     class Meta:
         verbose_name = 'Контакт'

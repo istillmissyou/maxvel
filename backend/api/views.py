@@ -1,9 +1,9 @@
-from celery_task.task import send_email_with_shopping_card
 from rest_framework import generics
 from rest_framework.viewsets import (GenericViewSet, ModelViewSet,
                                      ReadOnlyModelViewSet)
-from users.models import Contact, Link
 
+from celery_task.task import send_email_with_shopping_card
+from users.models import Contact, Link
 from .models import Category, Ingredient, Position, ShoppingCart
 from .serializers import (CategorySerializer, ContactSerializer,
                           PositionCreateSerializer, PositionViewSerializer,
@@ -80,3 +80,7 @@ class ShoppingCartViewSet(
 class ContactViewSet(ReadOnlyModelViewSet):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+
+    def perform_destroy(self, instance):
+        Link.objects.filter(contact=instance).delete()
+        instance.delete()
