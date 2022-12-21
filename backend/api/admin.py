@@ -1,7 +1,8 @@
 from django.contrib import admin
 
-from .models import (Category, Ingredient, PositionForShopingCart, Position,
-                     ShoppingCart)
+# from .models import (Category, Ingredient, PositionForShopingCart, Position,
+#                      ShoppingCart)
+from .models import Category, Position, PositionForShopingCart, ShoppingCart
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -11,13 +12,13 @@ class CategoryAdmin(admin.ModelAdmin):
     )
 
 
-class IngredientAdmin(admin.ModelAdmin):
-    list_display = (
-        'pk',
-        'name',
-        'measurement_unit',
-        'amount',
-    )
+# class IngredientAdmin(admin.ModelAdmin):
+#     list_display = (
+#         'pk',
+#         'name',
+#         'measurement_unit',
+#         'amount',
+#     )
 
 
 class PositionAdmin(admin.ModelAdmin):
@@ -56,7 +57,7 @@ class PosithionForShopingCartAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(Ingredient, IngredientAdmin)
+# admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Position, PositionAdmin)
 admin.site.register(ShoppingCart, ShoppingCartAdmin)
 admin.site.register(PositionForShopingCart, PosithionForShopingCartAdmin)

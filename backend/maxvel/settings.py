@@ -64,8 +64,12 @@ WSGI_APPLICATION = 'maxvel.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.sqlite3'),
+        'NAME': os.getenv('DB_NAME', default='db.sqlite3'),
+        'USER': os.getenv('POSTGRES_USER', default=''),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default=''),
+        'HOST': os.getenv('DB_HOST', default=''),
+        'PORT': os.getenv('DB_PORT', default='')
     }
 }
 
@@ -100,15 +104,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-SWAGGER_SETTINGS = {
-   'SECURITY_DEFINITIONS': {
-      'Bearer': {
-            'type': 'apiKey',
-            'name': 'Authorization',
-            'in': 'header'
-      }
-   }
-}
+# SWAGGER_SETTINGS = {
+#    'SECURITY_DEFINITIONS': {
+#       'Bearer': {
+#             'type': 'apiKey',
+#             'name': 'Authorization',
+#             'in': 'header'
+#       }
+#    }
+# }
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
@@ -116,19 +120,19 @@ CORS_ALLOWED_ORIGINS = [
 
 AUTH_USER_MODEL = 'users.User'
 
-DJOSER = {
-    'LOGIN_FIELD': 'username',
-    'HIDE_USERS': False,
-    'SERIALIZERS': {
-        'user_create': 'api.serializers.ApiUserCreateSerializer',
-        'user': 'api.serializers.ApiUserSerializer',
-        'current_user': 'api.serializers.ApiUserSerializer',
-    },
-    'PERMISSIONS': {
-        'user': ('rest_framework.permissions.IsAuthenticated',),
-        'user_list': ('rest_framework.permissions.IsAuthenticated',)
-    }
-}
+# DJOSER = {
+#     'LOGIN_FIELD': 'username',
+#     'HIDE_USERS': False,
+#     'SERIALIZERS': {
+#         'user_create': 'api.serializers.ApiUserCreateSerializer',
+#         'user': 'api.serializers.ApiUserSerializer',
+#         'current_user': 'api.serializers.ApiUserSerializer',
+#     },
+#     'PERMISSIONS': {
+#         'user': ('rest_framework.permissions.IsAuthenticated',),
+#         'user_list': ('rest_framework.permissions.IsAuthenticated',)
+#     }
+# }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -142,10 +146,10 @@ REST_FRAMEWORK = {
     ],
 }
 
-SIMPLE_JWT = {
-   'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
-   'AUTH_HEADER_TYPES': ('Bearer',),
-}
+# SIMPLE_JWT = {
+#    'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
+#    'AUTH_HEADER_TYPES': ('Bearer',),
+# }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 

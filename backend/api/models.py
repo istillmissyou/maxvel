@@ -8,13 +8,18 @@ from django.db.models import (CASCADE, BooleanField, CharField, DateTimeField,
 from django.utils.translation import gettext_lazy as _
 
 
+
 class Category(Model):
     name = CharField(
         verbose_name='Наименование',
         max_length=50,
         unique=True,
     )
-    order = IntegerField(default=0)
+    order = IntegerField(
+        verbose_name='Очередность отображения',
+        help_text='По возвростанию',
+        default=0
+    )
 
     class Meta:
         ordering = ('-order',)
@@ -25,22 +30,22 @@ class Category(Model):
         return self.name
 
 
-class Ingredient(Model):
-    name = CharField(verbose_name='Наименование', max_length=50)
-    measurement_unit = CharField(
-        verbose_name='Единица измерения',
-        max_length=30,
-    )
-    amount = PositiveSmallIntegerField(
-        verbose_name='Количество',
-        validators=(
-            MinValueValidator(1),
-        ),
-    )
+# class Ingredient(Model):
+#     name = CharField(verbose_name='Наименование', max_length=50)
+#     measurement_unit = CharField(
+#         verbose_name='Единица измерения',
+#         max_length=30,
+#     )
+#     amount = PositiveSmallIntegerField(
+#         verbose_name='Количество',
+#         validators=(
+#             MinValueValidator(1),
+#         ),
+#     )
 
-    class Meta:
-        verbose_name = 'Ингредиент'
-        verbose_name_plural = 'Ингредиенты'
+#     class Meta:
+#         verbose_name = 'Ингредиент'
+#         verbose_name_plural = 'Ингредиенты'
 
 #     def __str__(self):
 #         return self.name
@@ -51,11 +56,12 @@ class Position(Model):
     price = PositiveSmallIntegerField(verbose_name='Цена')
     new = BooleanField(verbose_name='Новинка!', default=False)
     text = TextField(verbose_name='Описание')
-    ingredients = ManyToManyField(
-        Ingredient,
-        verbose_name='Ингредиенты',
-        related_name='positions',
-    )
+    ingredients = CharField(verbose_name='Ингредиенты', max_length=1024)
+    # ingredients = ManyToManyField(
+    #     Ingredient,
+    #     verbose_name='Ингредиенты',
+    #     related_name='positions',
+    # )
     category = ManyToManyField(
         Category,
         verbose_name='Категория',
