@@ -6,7 +6,7 @@ from rest_framework.serializers import (CharField, IntegerField,
                                         ModelSerializer, SerializerMethodField,
                                         ValidationError)
 from rest_framework.validators import UniqueValidator
-from users.models import Contact, Link
+from users.models import CallMe, Contact, Link
 
 # from .models import (Category, Ingredient, Position, PositionForShopingCart,
 #                      ShoppingCart)
@@ -227,3 +227,20 @@ class ContactSerializer(ModelSerializer):
 #         categories = validated_data.pop('category', None)
 #         instance.category.set(categories)
 #         return super().update(instance, validated_data)
+
+
+class CallMeSerializer(ModelSerializer):
+    phone = CharField()
+    comment = CharField()
+
+    class Meta:
+        fields = '__all__'
+        model = CallMe
+
+    def validate_phone(self, value):
+        new_number = phonenumbers.parse(value, "RU")
+        if phonenumbers.is_valid_number(new_number) is False:
+            raise ValidationError('Поле телефона не корректное')
+        # if len(value) != 11:
+        #     raise ValidationError('Поле телефона должно состоять из 11 цифр')
+        return value

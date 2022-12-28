@@ -1,16 +1,20 @@
-from celery_task.task import send_email_with_shopping_card
+from celery_task.task import (send_email_with_call_me,
+                              send_email_with_shopping_card)
+from django.shortcuts import get_object_or_404
 from rest_framework import generics
+from rest_framework.response import Response
 from rest_framework.viewsets import (GenericViewSet, ModelViewSet,
                                      ReadOnlyModelViewSet)
-from users.models import Contact, Link
+from users.models import CallMe, Contact, Link
 
 # from .models import Category, Ingredient, Position, ShoppingCart
 from .models import Category, Position, ShoppingCart
 # from .serializers import (CategorySerializer, ContactSerializer,
 #                           PositionCreateSerializer, PositionViewSerializer,
 #                           ShoppingCartSerializer)
-from .serializers import (CategorySerializer, ContactSerializer,
-                          PositionViewSerializer, ShoppingCartSerializer)
+from .serializers import (CallMeSerializer, CategorySerializer,
+                          ContactSerializer, PositionViewSerializer,
+                          ShoppingCartSerializer)
 
 # class CategoriesViewSet(ModelViewSet):
 #     queryset = Category.objects.all()
@@ -68,7 +72,7 @@ class PositionViewSet(ReadOnlyModelViewSet):
 
 
 class ShoppingCartViewSet(
-            generics.ListAPIView,
+            # generics.ListAPIView,
             generics.CreateAPIView,
             generics.RetrieveAPIView,
             GenericViewSet
@@ -81,10 +85,29 @@ class ShoppingCartViewSet(
         send_email_with_shopping_card.delay(shopping_card.pk,)
 
 
-class ContactViewSet(ReadOnlyModelViewSet):
-    queryset = Contact.objects.all()
+class ContactViewSet(
+            generics.ListAPIView,
+            GenericViewSet
+            ):
     serializer_class = ContactSerializer
 
-    def perform_destroy(self, instance):
-        Link.objects.filter(contact=instance).delete()
-        instance.delete()
+    def list(self, request, *args, **kwargs):
+        obj = get_object_or_404(Contact, pk=1)
+        serializer = self.get_serializer(obj)
+        return Response(serializer.data)
+
+    # def perform_destroy(self, instance):
+    #     Link.objects.filter(contact=instance).delete()
+    #     instance.delete()
+
+
+class CallMeViewSet(
+            generics.CreateAPIView,
+            GenericViewSet
+        ):
+    queryset = CallMe.objects.all()
+    serializer_class = CallMeSerializer
+
+    def perform_create(self, serializer):
+        call_me = serializer.save()
+        send_email_with_call_me.delay(call_me.pk,)

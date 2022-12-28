@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Contact, Link, User
+from .models import CallMe, Contact, Link, User
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -36,6 +36,15 @@ class LinkAdmin(admin.ModelAdmin):
     )
 
 
+class CallMeAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+        'phone',
+        'comment',
+    )
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Contact, ContactAdmin)
 admin.site.register(Link, LinkAdmin)
+admin.site.register(CallMe, CallMeAdmin)
