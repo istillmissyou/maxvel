@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+
+  db:
+    image: mysql
+    volumes:
+      - /var/lib/mysql/data/
+    env_file:
+      - ./.env
+
+  backend:
+    image: ssd256/maxvel_back:latest
+    restart: always
+    volumes:
+      - static_value:/app/static/
+      - media_value:/app/media/
+    depends_on:
+      - db
+    env_file:
+      - ./.env
+
+  nginx:
+    image: nginx:1.21.3-alpine
+    ports:
+      - 8001:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - static_value:/var/html/static/
+      - media_value:/var/html/media/
+    depends_on:
+      - backend
+
+volumes:
+  static_value:
+  media_value:
+  postgres_data:
