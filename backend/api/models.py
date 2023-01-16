@@ -8,7 +8,6 @@ from django.db.models import (CASCADE, BooleanField, CharField, DateTimeField,
 from django.utils.translation import gettext_lazy as _
 
 
-
 class Category(Model):
     name = CharField(
         verbose_name='Наименование',
