@@ -64,12 +64,12 @@ WSGI_APPLICATION = 'maxvel.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.sqlite3'),
-        'NAME': os.getenv('DB_NAME', default='db.sqlite3'),
-        'USER': os.getenv('POSTGRES_USER', default=''),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default=''),
-        'HOST': os.getenv('DB_HOST', default=''),
-        'PORT': os.getenv('DB_PORT', default='')
+        'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
+        'NAME': os.getenv('DB_NAME', default='postgres'),
+        'USER': os.getenv('POSTGRES_USER', default='postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='my_key_for_test'),
+        'HOST': os.getenv('DB_HOST', default='db'),
+        'PORT': os.getenv('DB_PORT', default='5432'),
     }
 }
 
