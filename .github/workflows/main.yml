@@ -1,7 +1,8 @@
 name: Maxvel workflow
 on:
   push:
-    branches: [backend]
+    - 'main'
+    - 'develop'
 jobs:
   tests:
     runs-on: ubuntu-latest
