@@ -10,7 +10,7 @@ schema_view = get_schema_view(
    openapi.Info(
       title="Документация",
       default_version='v1',
-      description="Можно посмотреть что нужно для запроса и что возвращает запрос",
+      description="Можно посмотреть что нужно для запроса и что возвращает",
    ),
    public=True,
    permission_classes=(permissions.AllowAny,),
@@ -37,5 +37,11 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(
+      settings.STATIC_URL,
+      document_root=settings.STATIC_ROOT
+    )
+    urlpatterns += static(
+      settings.MEDIA_URL,
+      document_root=settings.MEDIA_ROOT
+    )
