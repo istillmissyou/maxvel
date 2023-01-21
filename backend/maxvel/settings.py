@@ -170,3 +170,5 @@ CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
 
 EMAIL_USER = os.getenv('EMAIL_USER')
+
+CSRF_TRUSTED_ORIGINS = ['http://92.63.106.189']
